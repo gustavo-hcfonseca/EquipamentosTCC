@@ -1,0 +1,2 @@
+# EquipamentosTCC
+projeto do TCC
