@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Estado {
+public class EstadoPedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +21,18 @@ public class Estado {
 	@Size(min = 3, message = "O nome do estado deve ter ao menos 3 caracteres!")
 	private String nome;
 	
-	@OneToMany(mappedBy = "estado")
-	private List<Equipamento> equipamentos;
 	
 	
-	public Estado(String nome) {
+	@OneToMany(mappedBy = "estadoPedido")
+	private List<Pedido> pedidos;
+	
+	public EstadoPedido(String nome) {
 		super();
 		this.nome = nome;
 	}
 
 		
-	public Estado() {
+	public EstadoPedido() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -56,16 +57,16 @@ public class Estado {
 		this.nome = nome;
 	}
 
-	public List<Equipamento> getEquipamentos() {
-		return equipamentos;
+
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
 	}
 
-	public void setEquipamentos(List<Equipamento> equipamentos) {
-		this.equipamentos = equipamentos;
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
-
-
-
 	
 	
 	

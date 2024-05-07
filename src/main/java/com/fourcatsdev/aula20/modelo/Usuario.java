@@ -58,6 +58,9 @@ public class Usuario {
 	@OneToMany(mappedBy = "usuario")
 	private List<Emprestimo> emprestimos;
 	
+	@OneToMany(mappedBy = "usuario")
+	private List<Pedido> pedidos;
+	
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="usuario_papel",
@@ -128,5 +131,12 @@ public class Usuario {
 	public void setPapeis(List<Papel> papeis) {
 		this.papeis = papeis;
 	}
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+	
 	
 }

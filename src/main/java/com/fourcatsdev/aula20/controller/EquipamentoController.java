@@ -1,11 +1,15 @@
 package com.fourcatsdev.aula20.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,13 +25,15 @@ import com.fourcatsdev.aula20.exception.EquipamentoNotFoundException;
 import com.fourcatsdev.aula20.modelo.Categoria;
 import com.fourcatsdev.aula20.modelo.Equipamento;
 import com.fourcatsdev.aula20.modelo.Estado;
+import com.fourcatsdev.aula20.modelo.EstadoPedido;
+import com.fourcatsdev.aula20.modelo.Pedido;
+import com.fourcatsdev.aula20.modelo.Usuario;
 import com.fourcatsdev.aula20.service.CategoriaService;
 import com.fourcatsdev.aula20.service.EquipamentoService;
+import com.fourcatsdev.aula20.service.EstadoPedidoService;
 import com.fourcatsdev.aula20.service.EstadoService;
-
-
-
-
+import com.fourcatsdev.aula20.service.PedidoService;
+import com.fourcatsdev.aula20.service.UsuarioService;
 
 
 @Controller
@@ -43,7 +49,14 @@ public class EquipamentoController {
 	@Autowired
 	private EstadoService estadoService;
 	
+	@Autowired
+	private UsuarioService usuarioService;
 	
+	@Autowired
+	private EstadoPedidoService estadoPedidoService;
+	
+	@Autowired
+	private PedidoService pedidoService;
 	
 	//listar para o admin
 	@GetMapping("/admin/listar")
@@ -62,21 +75,21 @@ public class EquipamentoController {
     }
 	
 	//buscar para o user
-	/*
+	
 	@PostMapping("/buscar")
     public String buscarEquipamentos(Model model, @Param("nome") String nome) {	
 		if (nome == null) {
-			return "redirect:/";
+			return "redirect:/equipamento/listar";
 		}
 		List<Equipamento> equipamentos = equipamentoService.buscarTodosEquipamentosPorNome(nome);
 		model.addAttribute("equipamentos",equipamentos);
 		return "/auth/user/user-listar-equipamento";
     }
-	*/
+	
 	
 	//buscar para o admin
 	@PostMapping("/admin/buscar")
-    public String buscarEquipamentos(Model model, @Param("nome") String nome) {	
+    public String buscarEquipamentosAdmin(Model model, @Param("nome") String nome) {	
 		if (nome  == null) {
 			return "redirect:/equipamento/admin/listar";
 		}
@@ -150,7 +163,19 @@ public class EquipamentoController {
 	}
 	
 	
-	
+	@PostMapping("/pedidos")
+	public String postRequests(@CurrentSecurityContext(expression = "authentication.name") String login, 
+			@RequestParam(value = "idsEquipamentos", required = false) int[] ids, @RequestParam(value = "dataEmprestimo") String dataEmprestimo, 
+	@RequestParam(value = "dataDevolucao") String dataDevolucao, @RequestParam(value = "finalidade") String finalidade) throws ParseException, EquipamentoNotFoundException {
+		
+		Usuario usuario = usuarioService.buscarUsuarioPorLogin(login);
+		pedidoService.gravar(usuario, dataEmprestimo, dataDevolucao, finalidade, ids);
+		
+		return "redirect:/usuario/index";
+		
+		//sql do banco 
+		//select distinct usuario_id, data_pedido::date from pedido;
+	}
 	
 		
 }

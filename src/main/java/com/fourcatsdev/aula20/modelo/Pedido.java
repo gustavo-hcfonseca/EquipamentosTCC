@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Emprestimo {
+public class Pedido {
+	
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,15 +21,29 @@ public class Emprestimo {
 	
 	private Date dataDevolucao;
 	
+	private Date dataPedido;
+	
 	private String finalidade;
 	
-	@ManyToOne //relacionamento de n emprestimos para um usuario
+	
+	@ManyToOne //relacionamento de n pedidos para um usuario
+	private Equipamento equipamentoPedido;
+	
+	
+	@ManyToOne //relacionamento de n pedidos para um usuario
 	private Usuario usuario;
 
-	@ManyToOne //relacionamento de n emprestimos para um usuario
-	private Equipamento equipamento;
-
+	@ManyToOne //relacionamento de n pedidos para um estado
+	private EstadoPedido estadoPedido;
 	
+	public EstadoPedido getEstadoPedido() {
+		return estadoPedido;
+	}
+
+	public void setEstadoPedido(EstadoPedido estadoPedido) {
+		this.estadoPedido = estadoPedido;
+	}
+
 	//getters e setters
 	public Long getId() {
 		return id;
@@ -53,6 +69,15 @@ public class Emprestimo {
 		this.dataDevolucao = dataDevolucao;
 	}
 
+	
+	public Date getDataPedido() {
+		return dataPedido;
+	}
+
+	public void setDataPedido(Date dataPedido) {
+		this.dataPedido = dataPedido;
+	}
+
 	public String getFinalidade() {
 		return finalidade;
 	}
@@ -69,17 +94,17 @@ public class Emprestimo {
 		this.usuario = usuario;
 	}
 
-	public Equipamento getEquipamento() {
-		return equipamento;
+	
+
+	public Equipamento getEquipamentoPedido() {
+		return equipamentoPedido;
 	}
 
-	public void setEquipamento(Equipamento equipamento) {
-		this.equipamento = equipamento;
+	public void setEquipamentoPedido(Equipamento equipamentoPedido) {
+		this.equipamentoPedido = equipamentoPedido;
 	}
-	
-	
-	
-	
+
+		
 	
 	
 }

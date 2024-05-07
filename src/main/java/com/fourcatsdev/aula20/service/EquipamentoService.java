@@ -44,7 +44,7 @@ public class EquipamentoService {
 	}
 	
 	public List<Equipamento> buscarTodosEquipamentosPorNome(String nome){
-		return equipamentoRepository.findByNomeContainingIgnoreCase(nome);
+		return equipamentoRepository.findByNomeOrFabricanteContainingIgnoreCase(nome, nome);
 	}
 	
 	

@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.fourcatsdev.aula20.modelo.Equipamento;
 
 public interface EquipamentoRepository extends JpaRepository<Equipamento, Long> {
-	List<Equipamento> findByNomeContainingIgnoreCase(String nome);
+	List<Equipamento> findByNomeOrFabricanteContainingIgnoreCase(String nome,String fabricante);
 
 }

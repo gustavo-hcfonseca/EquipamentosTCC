@@ -48,7 +48,8 @@ public class Equipamento {
 	private List<Emprestimo> emprestimos;
 	
 	
-	
+	@OneToMany(mappedBy = "equipamentoPedido")
+	private List<Pedido> pedidos;
 	
 
 	public Estado getEstado() {
@@ -122,5 +123,15 @@ public class Equipamento {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+	
+	
 }
 
