@@ -15,6 +15,8 @@ import com.fourcatsdev.aula20.modelo.EstadoPedido;
 import com.fourcatsdev.aula20.modelo.Pedido;
 import com.fourcatsdev.aula20.modelo.Usuario;
 import com.fourcatsdev.aula20.repository.PedidoRepository;
+import com.fourcatsdev.aula20.repository.PedidoResponseData;
+import com.fourcatsdev.aula20.repository.PedidoResponseEquipamento;
 
 @Service
 public class PedidoService {
@@ -71,6 +73,16 @@ public class PedidoService {
 	
 	public void alterarPedido(Pedido pedido) {
 		pedidoRepository.save(pedido);		
+	}
+	
+	public List<PedidoResponseData> buscarPedido() {
+		List<PedidoResponseData> pedidos = 	pedidoRepository.buscarPedidoDeUsuario();
+		return pedidos;
+	}
+	
+	public List<PedidoResponseEquipamento> buscarPedidoEquipamento(Long idPedido, String dataPedido) {
+		List<PedidoResponseEquipamento> pedidos = 	pedidoRepository.buscarPedidoEquipamento(idPedido, dataPedido);
+		return pedidos;
 	}
 	
 }

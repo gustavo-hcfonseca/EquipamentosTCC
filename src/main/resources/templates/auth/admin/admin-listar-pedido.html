@@ -26,6 +26,7 @@
 			<tr>
 				<th th:text="#{pedido.id}"></th>
 				<th th:text="#{pedido.usuario.nome}"></th>
+				<th th:text="#{pedido.date}"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,7 +35,15 @@
 			</tr>
 			<tr th:each="pedido : ${pedidos}">
 				<td><span th:text="${pedido.id}"></span></td>
-				<td><span th:text="${pedido.usuario.nome}"></span></td>
+				<td><span th:text="${pedido.nome}"></span></td>
+				<td><span th:text="${pedido.data}"></span></td>
+				<td>
+					<a class="btn btn-outline-primary btn-sm" 
+					   th:href="@{/pedido/ver/{id}/{data}(id=${pedido.id}, data=${pedido.data})}"
+					   th:text="#{pedido.ver}">
+					</a>
+				</td>
+				<!--  
 				<td>
 					<a class="btn btn-outline-danger btn-sm" 
 					   th:href="@{/pedido/apagar/{id}(id=${pedido.id})}"
@@ -50,7 +59,7 @@
 					</a>
 				</td>
 				
-				
+				-->
 			</tr>
 		</tbody>
 	</table>    

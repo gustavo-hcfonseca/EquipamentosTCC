@@ -8,5 +8,5 @@ import com.fourcatsdev.aula20.modelo.Equipamento;
 
 public interface EquipamentoRepository extends JpaRepository<Equipamento, Long> {
 	List<Equipamento> findByNomeOrFabricanteContainingIgnoreCase(String nome,String fabricante);
-
+	
 }

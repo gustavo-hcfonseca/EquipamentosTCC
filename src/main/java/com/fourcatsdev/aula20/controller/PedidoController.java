@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fourcatsdev.aula20.modelo.Equipamento;
 import com.fourcatsdev.aula20.modelo.Pedido;
+import com.fourcatsdev.aula20.repository.PedidoResponseData;
+import com.fourcatsdev.aula20.repository.PedidoResponseEquipamento;
 import com.fourcatsdev.aula20.service.EquipamentoService;
 import com.fourcatsdev.aula20.service.PedidoService;
 
@@ -31,8 +35,14 @@ public class PedidoController {
 	
 	@RequestMapping("/listar")
 	public String listarPedido(Model model) {
-		List<Pedido> pedidos = pedidoService.listar();
- 		model.addAttribute("pedidos", pedidos);		
+		//List<Pedido> pedidos = pedidoService.listar();
+ 		//model.addAttribute("pedidos", pedidos);
+		List<PedidoResponseData> pedidos = 	pedidoService.buscarPedido();
+		model.addAttribute("pedidos", pedidos);
+		for(PedidoResponseData p:pedidos) {
+			System.out.println(p.getId());
+			System.out.println(p.getData());
+		}
 		return "/auth/admin/admin-listar-pedido";
 	}
 	
@@ -43,14 +53,20 @@ public class PedidoController {
 	}
 	
 	//implementar
-	/*
-	@RequestMapping("/ver")
-	public String VerPedido(Model model) {
-		List<Equipamentos> equipamentos = equipamentoService.listar();//fazer o relacionamento many to many para conseguir listar
- 		model.addAttribute("pedidos", pedidos);		
+	
+	@RequestMapping("/ver/{id}/{data}")
+	public String VerPedido(@PathVariable("id") Long id, @PathVariable("data") String data, Model model) {
+		System.out.println("------------------> "+ data);
+		List<PedidoResponseEquipamento> equipamentos = pedidoService.buscarPedidoEquipamento(id, data);
+		for(PedidoResponseEquipamento e:equipamentos) {
+			System.out.println(e.getId());
+			System.out.println(e.getFabricante());
+		}
+ 		model.addAttribute("equipamentos", equipamentos);		
 		return "/auth/admin/admin-ver-pedido";
 	}
-	*/
+	
+	
 	
 	//alterar para o pedido ser feito com as informações preenchidas pelo usuario na user-listar-equipamento 
 	/*@GetMapping("/novo")
