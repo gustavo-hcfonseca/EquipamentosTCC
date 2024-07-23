@@ -39,6 +39,7 @@ public class PedidoService {
 		Date dateDevolucao = formatter.parse(dataDevolucao);
 		
 		for(int i = 0; i < ids.length; i++) {
+			
 			Pedido pedido = new Pedido();
 			pedido.setDataEmprestimo(dateEmprestimo);
 			pedido.setDataDevolucao(dateDevolucao);
@@ -48,7 +49,8 @@ public class PedidoService {
 			pedido.setEstadoPedido(estadoPedido);
 			Equipamento equipamento = equipamentoService.buscarEquipamentoPorId((long) ids[i]);
 			pedido.setEquipamentoPedido(equipamento);			
-			pedidoRepository.save(pedido);
+			Pedido p = pedidoRepository.save(pedido);
+			System.out.println( "Gravou " + p.getId());
 		}
 	}
 	
@@ -66,6 +68,10 @@ public class PedidoService {
 	}
 	
 	
+	public List<PedidoResponseData> buscarPedidoDeUsuario(Long id) {
+		return pedidoRepository.buscarPedidoDeUsuario(id);
+	}
+	
 	public void apagarPedidoPorId(Long id) {
 		Pedido pedido = buscarPedidoPorId(id);
 		pedidoRepository.delete(pedido);		
@@ -80,8 +86,8 @@ public class PedidoService {
 		return pedidos;
 	}
 	
-	public List<PedidoResponseEquipamento> buscarPedidoEquipamento(Long idPedido, String dataPedido) {
-		List<PedidoResponseEquipamento> pedidos = 	pedidoRepository.buscarPedidoEquipamento(idPedido, dataPedido);
+	public List<PedidoResponseEquipamento> buscarPedidoEquipamento(Long idUsuario, String dataPedido) {
+		List<PedidoResponseEquipamento> pedidos = 	pedidoRepository.buscarPedidoEquipamento(idUsuario, dataPedido);
 		return pedidos;
 	}
 	

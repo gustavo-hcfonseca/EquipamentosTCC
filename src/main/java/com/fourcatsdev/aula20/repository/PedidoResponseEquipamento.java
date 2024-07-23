@@ -9,4 +9,6 @@ public interface PedidoResponseEquipamento {
 	public String getNome();
 	public String getNumero();
 	public String getFabricante();
+	public Long getEstado();
+	
 }

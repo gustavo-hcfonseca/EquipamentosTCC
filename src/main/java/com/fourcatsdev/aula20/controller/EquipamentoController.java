@@ -168,6 +168,10 @@ public class EquipamentoController {
 			@RequestParam(value = "idsEquipamentos", required = false) int[] ids, @RequestParam(value = "dataEmprestimo") String dataEmprestimo, 
 	@RequestParam(value = "dataDevolucao") String dataDevolucao, @RequestParam(value = "finalidade") String finalidade) throws ParseException, EquipamentoNotFoundException {
 		
+		for(int i = 0; i < ids.length; i++) {
+			System.out.println(ids[i]);
+		}
+		
 		Usuario usuario = usuarioService.buscarUsuarioPorLogin(login);
 		pedidoService.gravar(usuario, dataEmprestimo, dataDevolucao, finalidade, ids);
 		

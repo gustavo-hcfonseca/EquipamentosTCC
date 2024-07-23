@@ -1,10 +1,15 @@
 package com.fourcatsdev.aula20.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,25 +23,42 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fourcatsdev.aula20.modelo.Equipamento;
 import com.fourcatsdev.aula20.modelo.Pedido;
+import com.fourcatsdev.aula20.modelo.Usuario;
 import com.fourcatsdev.aula20.repository.PedidoResponseData;
 import com.fourcatsdev.aula20.repository.PedidoResponseEquipamento;
 import com.fourcatsdev.aula20.service.EquipamentoService;
 import com.fourcatsdev.aula20.service.PedidoService;
+import com.fourcatsdev.aula20.service.UsuarioService;
 
 @Controller
 @RequestMapping("/pedido")
 public class PedidoController {
 
 	@Autowired
+	private UsuarioService usuarioService;
+	
+	@Autowired
 	private PedidoService pedidoService;
 	
 	@Autowired
 	private EquipamentoService equipamentoService;
 	
-	@RequestMapping("/listar")
-	public String listarPedido(Model model) {
-		//List<Pedido> pedidos = pedidoService.listar();
- 		//model.addAttribute("pedidos", pedidos);
+	
+	
+	/*
+	 * 
+	 * método alterarEstado recebe o id do pedido e o id
+	 * pedidoBuscado =  vai no banco busca o pedido por id
+	 * se for aprovado 
+	 * estadoPedidoBuscado = vai no banco busca EstadoPedido pelo id de aprovado
+	 *   pedidoBuscado.setEstadoPedido(estadoPedidoBuscado )
+	 *   salvar(pedidoBuscado)
+	 * 
+	 * */
+	
+	//listar para o admin
+	@RequestMapping("/admin/listar")
+	public String listarPedidoAdmin(Model model) {
 		List<PedidoResponseData> pedidos = 	pedidoService.buscarPedido();
 		model.addAttribute("pedidos", pedidos);
 		for(PedidoResponseData p:pedidos) {
@@ -46,13 +68,33 @@ public class PedidoController {
 		return "/auth/admin/admin-listar-pedido";
 	}
 	
+	//listar para o user(listar pedidos apenas do usuário)
+	 
+	@RequestMapping("/listar")
+	public String listarPedido(Model model, @CurrentSecurityContext(expression = "authentication.name") String login){
+	   
+		Usuario usuario = usuarioService.buscarUsuarioPorLogin(login);
+		// Buscando o pedido pelo ID
+		List<PedidoResponseData> pedidos = pedidoService.buscarPedidoDeUsuario(usuario.getId());
+		
+	    // Adicionando o pedido ao modelo
+	    model.addAttribute("pedido", pedidos);
+	    for(PedidoResponseData p:pedidos) {
+			System.out.println(p.getId());
+			System.out.println(p.getData());
+		}
+	    return "/auth/user/user-listar-pedido";
+	}
+	
+	
 	@GetMapping("/apagar/{id}")
 	public String deletePedido(@PathVariable("id") long id, Model model) {
 		pedidoService.apagarPedidoPorId(id);				
 	    return "redirect:/auth/admin/pedido/listar";
 	}
 	
-	//implementar
+	
+	
 	
 	@RequestMapping("/ver/{id}/{data}")
 	public String VerPedido(@PathVariable("id") Long id, @PathVariable("data") String data, Model model) {
@@ -65,8 +107,9 @@ public class PedidoController {
  		model.addAttribute("equipamentos", equipamentos);		
 		return "/auth/admin/admin-ver-pedido";
 	}
-	
-	
+
+
+	//implementar um ver pedido para o usuário também
 	
 	//alterar para o pedido ser feito com as informações preenchidas pelo usuario na user-listar-equipamento 
 	/*@GetMapping("/novo")
