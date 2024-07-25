@@ -66,8 +66,7 @@ public class PedidoService {
 			throw new IllegalArgumentException("Pedido com id : " + id + " não existe");
 		}
 	}
-	
-	
+		
 	public List<PedidoResponseData> buscarPedidoDeUsuario(Long id) {
 		return pedidoRepository.buscarPedidoDeUsuario(id);
 	}
@@ -90,5 +89,10 @@ public class PedidoService {
 		List<PedidoResponseEquipamento> pedidos = 	pedidoRepository.buscarPedidoEquipamento(idUsuario, dataPedido);
 		return pedidos;
 	}
+	
+	public void salvar(Pedido pedido) {
+        pedidoRepository.save(pedido);
+    }
+	
 	
 }

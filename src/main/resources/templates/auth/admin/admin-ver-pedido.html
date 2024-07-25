@@ -67,11 +67,7 @@
 									<td><span th:text="${equipamento.fabricante}"></span></td>
 									
 
-									<!-- Fazer if else usando o thymeleaf 
-									
-									se igual a 1 não mostra os botões e aparece a palavra aprovado no lugar
-									se igaul a 2 não mostra os botões e aparece a palavra negado no lugar
-									senão aparece os botões 
+									<!-- verificar situação do case = 3 ser o em análise
 									 -->
 
 									<th:block th:switch="${equipamento.estado}">
@@ -87,7 +83,7 @@
 													Aprovar </a></td>
 											<td><a class="btn btn-outline-danger btn-sm"
 												th:href="@{/pedido/admin/aprovar/2/{idPedido}(idPedido=${equipamento.id})}">
-													Reprovar </a></td>
+													Negar </a></td>
 
 										</div>
 									</th:block>

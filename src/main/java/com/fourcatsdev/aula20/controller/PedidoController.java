@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fourcatsdev.aula20.modelo.Equipamento;
+import com.fourcatsdev.aula20.modelo.EstadoPedido;
 import com.fourcatsdev.aula20.modelo.Pedido;
 import com.fourcatsdev.aula20.modelo.Usuario;
 import com.fourcatsdev.aula20.repository.PedidoResponseData;
 import com.fourcatsdev.aula20.repository.PedidoResponseEquipamento;
 import com.fourcatsdev.aula20.service.EquipamentoService;
+import com.fourcatsdev.aula20.service.EstadoPedidoService;
 import com.fourcatsdev.aula20.service.PedidoService;
 import com.fourcatsdev.aula20.service.UsuarioService;
 
@@ -43,7 +45,8 @@ public class PedidoController {
 	@Autowired
 	private EquipamentoService equipamentoService;
 	
-	
+	@Autowired
+	private EstadoPedidoService estadoPedidoService;
 	
 	/*
 	 * 
@@ -108,6 +111,38 @@ public class PedidoController {
 		return "/auth/admin/admin-ver-pedido";
 	}
 
+	@RequestMapping("/admin/aprovar/{estado}/{idPedido}")
+	public String aprovar(@PathVariable("estado") int estado, @PathVariable("idPedido") Long idPedido, RedirectAttributes attributes) {
+	    System.out.println("Estado recebido: " + estado);
+	    System.out.println("ID do Pedido recebido: " + idPedido);
+
+	    Pedido pedidoBuscado = pedidoService.buscarPedidoPorId(idPedido);
+	    if (pedidoBuscado != null) {
+	        EstadoPedido estadoPedidoBuscado = null;
+	        if (estado == 1) {
+	            estadoPedidoBuscado = estadoPedidoService.buscarPorNome("Aprovado");
+	        } else if (estado == 2) {
+	            estadoPedidoBuscado = estadoPedidoService.buscarPorNome("Negado");
+	        } else {
+	            attributes.addFlashAttribute("erro", "Ação inválida!");
+	            return "redirect:/pedido/admin/listar";
+	        }
+
+	        if (estadoPedidoBuscado != null) {
+	            pedidoBuscado.setEstadoPedido(estadoPedidoBuscado);
+	            pedidoService.salvar(pedidoBuscado);
+	            attributes.addFlashAttribute("mensagem", "Estado do pedido atualizado com sucesso!");
+	        } else {
+	            attributes.addFlashAttribute("erro", "Estado do pedido não encontrado!");
+	        }
+	    } else {
+	        attributes.addFlashAttribute("erro", "Pedido não encontrado!");
+	    }
+	    return "redirect:/pedido/admin/listar";
+	}
+
+
+	
 
 	//implementar um ver pedido para o usuário também
 	
