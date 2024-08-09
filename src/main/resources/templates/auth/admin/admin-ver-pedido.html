@@ -60,12 +60,14 @@
 								<tr th:each="equipamento : ${equipamentos}">
 
 									<td><span th:text="${equipamento.id}"></span></td>
-									<td><span th:text="${#dates.format(equipamento.emprestimo, 'yyyy-MM-dd')}"></span></td>
-                                    <td><span th:text="${#dates.format(equipamento.devolucao, 'yyyy-MM-dd')}"></span></td>
+									<td><span
+										th:text="${#dates.format(equipamento.emprestimo, 'yyyy-MM-dd')}"></span></td>
+									<td><span
+										th:text="${#dates.format(equipamento.devolucao, 'yyyy-MM-dd')}"></span></td>
 									<td><span th:text="${equipamento.nome}"></span></td>
 									<td><span th:text="${equipamento.numero}"></span></td>
 									<td><span th:text="${equipamento.fabricante}"></span></td>
-									
+
 
 									<!-- verificar situação do case = 3 ser o em análise
 									 -->
@@ -78,12 +80,24 @@
 											<td><span>Negado!</span></td>
 										</div>
 										<div th:case="'3'">
-											<td><a class="btn btn-outline-primary btn-sm"
-												th:href="@{/pedido/admin/aprovar/1/{idPedido}(idPedido=${equipamento.id})}">
-													Aprovar </a></td>
-											<td><a class="btn btn-outline-danger btn-sm"
-												th:href="@{/pedido/admin/aprovar/2/{idPedido}(idPedido=${equipamento.id})}">
-													Negar </a></td>
+
+
+											<th:block
+												th:if="${ #authorization.expression('hasAuthority(''ADMIN'')')}">
+												<td><a class="btn btn-outline-primary btn-sm"
+													th:href="@{/pedido/admin/aprovar/1/{idPedido}(idPedido=${equipamento.id})}">
+														Aprovar </a></td>
+												<td><a class="btn btn-outline-danger btn-sm"
+													th:href="@{/pedido/admin/aprovar/2/{idPedido}(idPedido=${equipamento.id})}">
+														Negar </a></td>
+											</th:block>
+
+
+											<th:block
+												th:if="${ #authorization.expression('hasAuthority(''USER'')')}">
+												<td><span>Em análise</span></td>
+											</th:block>
+
 
 										</div>
 									</th:block>

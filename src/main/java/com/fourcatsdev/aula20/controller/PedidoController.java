@@ -111,35 +111,54 @@ public class PedidoController {
 		return "/auth/admin/admin-ver-pedido";
 	}
 
-	@RequestMapping("/admin/aprovar/{estado}/{idPedido}")
-	public String aprovar(@PathVariable("estado") int estado, @PathVariable("idPedido") Long idPedido, RedirectAttributes attributes) {
-	    System.out.println("Estado recebido: " + estado);
-	    System.out.println("ID do Pedido recebido: " + idPedido);
+	 @RequestMapping("/admin/aprovar/{estado}/{idPedido}")
+	    public String aprovar(@PathVariable("estado") int estado, @PathVariable("idPedido") Long idPedido, RedirectAttributes attributes) {
+	        // Imprime no console o estado e o ID do pedido recebidos como parâmetros
+	        System.out.println("Estado recebido: " + estado);
+	        System.out.println("ID do Pedido recebido: " + idPedido);
 
-	    Pedido pedidoBuscado = pedidoService.buscarPedidoPorId(idPedido);
-	    if (pedidoBuscado != null) {
-	        EstadoPedido estadoPedidoBuscado = null;
-	        if (estado == 1) {
-	            estadoPedidoBuscado = estadoPedidoService.buscarPorNome("Aprovado");
-	        } else if (estado == 2) {
-	            estadoPedidoBuscado = estadoPedidoService.buscarPorNome("Negado");
+	        // Busca o pedido pelo ID fornecido
+	        Pedido pedidoBuscado = pedidoService.buscarPedidoPorId(idPedido);
+	        if (pedidoBuscado != null) {  // Verifica se o pedido foi encontrado
+	            EstadoPedido estadoPedidoBuscado = null;
+
+	            // Define o estado do pedido com base no valor do parâmetro "estado"
+	            switch (estado) {
+	                case 1:
+	                    estadoPedidoBuscado = estadoPedidoService.buscarPorNome("Aprovado");  // Busca o estado "Aprovado"
+	                    break;
+	                case 2:
+	                    estadoPedidoBuscado = estadoPedidoService.buscarPorNome("Negado");  // Busca o estado "Negado"
+	                    break;
+	                case 3:
+	                    estadoPedidoBuscado = estadoPedidoService.buscarPorNome("Em Análise");  // Busca o estado "Em Análise"
+	                    break;
+	                default:
+	                    // Se o estado não for 1, 2 ou 3, adiciona uma mensagem de erro e redireciona para a lista de pedidos
+	                    attributes.addFlashAttribute("erro", "Ação inválida!");
+	                    return "redirect:/pedido/admin/listar";
+	            }
+
+	            // Verifica se o estado do pedido foi encontrado
+	            if (estadoPedidoBuscado != null) {
+	                // Atualiza o estado do pedido e salva as alterações
+	                pedidoBuscado.setEstadoPedido(estadoPedidoBuscado);
+	                pedidoService.salvar(pedidoBuscado);
+	                // Adiciona uma mensagem de sucesso
+	                attributes.addFlashAttribute("mensagem", "Estado do pedido atualizado com sucesso!");
+	            } else {
+	                // Se o estado do pedido não foi encontrado, adiciona uma mensagem de erro
+	                attributes.addFlashAttribute("erro", "Estado do pedido não encontrado!");
+	            }
 	        } else {
-	            attributes.addFlashAttribute("erro", "Ação inválida!");
-	            return "redirect:/pedido/admin/listar";
+	            // Se o pedido não foi encontrado, adiciona uma mensagem de erro
+	            attributes.addFlashAttribute("erro", "Pedido não encontrado!");
 	        }
 
-	        if (estadoPedidoBuscado != null) {
-	            pedidoBuscado.setEstadoPedido(estadoPedidoBuscado);
-	            pedidoService.salvar(pedidoBuscado);
-	            attributes.addFlashAttribute("mensagem", "Estado do pedido atualizado com sucesso!");
-	        } else {
-	            attributes.addFlashAttribute("erro", "Estado do pedido não encontrado!");
-	        }
-	    } else {
-	        attributes.addFlashAttribute("erro", "Pedido não encontrado!");
+	        // Redireciona para a lista de pedidos
+	        return "redirect:/pedido/admin/listar";
 	    }
-	    return "redirect:/pedido/admin/listar";
-	}
+	
 
 
 	
